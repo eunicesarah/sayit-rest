@@ -4,6 +4,17 @@ import { logger } from './middlewares';
 
 const app = express();
 const port = 3000 ;
+const cors = require('cors');
+
+var corsOptions = {
+  origin: 'http://localhost:3001',
+  credentials: true,
+  methods: ['GET', 'PUT', 'POST', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200,
+  allowedOrigins: ['http://localhost:3001']
+};
+
 console.log(`port: ${port}`);
 
 app.use((req, res, next) => {
@@ -12,6 +23,8 @@ app.use((req, res, next) => {
     });
 
 app.use(logger);
+app.use(cors(corsOptions));
+app.use(express.json());
 app.use('/psikolog', psikologRouter);
 
 app.use((req, res, next) => {
@@ -20,5 +33,5 @@ app.use((req, res, next) => {
 );
 
 app.listen(port, () => {    
-    console.log(`Server started at http://localhost:${port}`);
+    console.log(`Server started at https://localhost:${port}`);
 });
