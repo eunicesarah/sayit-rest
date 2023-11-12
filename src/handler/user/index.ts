@@ -4,25 +4,23 @@ import { loginPsikolog, registerPsikolog } from "../../service/auth";
 import * as HttpStatus from 'http-status-codes';
 import { buildResponse } from "../../util/response";
 
-const login = () => {
-    return async (req: Request, res: Response, next: NextFunction) => {
+const login =  async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const email = req.body.email;
-        const password = req.body.password;
+        const psikolog_email = req.body.psikolog_email;
+        const psikolog_password = req.body.psikolog_password;
 
-        const users = {
-            email: email,
-            password: password
-        };
-
-        const result = loginPsikolog(users.email, users.password);
-        res.send("the result is " + result);
+        // const user = {
+        //     psikolog_email: psikolog_email,
+        //     psikolog_password: psikolog_password
+        // };
+        console.log("the user is " + psikolog_email + " " + psikolog_password);
+        const result = await loginPsikolog(psikolog_email, psikolog_password);
+        console.log("the result is " + result);
     }
     catch (error) {
         next(error);
         res.send("failed");
     }
-}
 }
 
 const register = async (req: Request, res: Response, next: NextFunction) => {

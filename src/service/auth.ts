@@ -73,18 +73,16 @@ const loginPsikolog = async (email: string, password: string) => {
     }
 
     console.log('Verifying password');
-    const checkPassword = ph.verify(password, user.psikolog_password);
     console.log('Entered Password:', password);
     console.log('Stored Hashed Password:', user.psikolog_password);
-    console.log('Password Verification Result:', checkPassword);
-    if (!checkPassword){
+    if (user.psikolog_password !== password){
         throw new Error("Wrong password");
     }
 
     console.log('Generating JWT');
     const payload = {
-        email: email,
-        password: password,
+        psikolog_email: email,
+        psiolog_password: password,
     }
     const secret = process.env.JWT_SECRET!;
     const duration = process.env.JWT_DURATION!;
