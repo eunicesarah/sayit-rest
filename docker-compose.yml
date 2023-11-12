@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL = {DATABASE_URL}
+    command: npm start
+
+  db:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE = rest_prisma
+    ports:
+      - '3307:3306'
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+
