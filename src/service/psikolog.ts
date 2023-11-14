@@ -1,14 +1,6 @@
 import mysql from "../infrastructure/database/mysql";
 import { psikolog } from "../models/psikolog/type";
-import { addPsikolog,
-    showPsikolog,
-    findPsikologByEmail,
-    findPsikologById,
-    updatePsikologName,
-    updatePsikologKlinik,
-    updatePsikologPhonenumber,
-    updatePsikologPassword,
-    updatePsikologEmail } from "../models/psikolog";
+import { addPsikolog, findPsikologByEmail, findPsikologById, updatePsikolog } from "../models/psikolog";
 
 const add = async (
     psikolog_email: string,
@@ -56,100 +48,37 @@ const showPsikologId = async (
     return psikolog;
 }
 
-const updateName = async (
+const updateProfile = async (
     psikolog_id: number,
-    psikolog_name: string ) => {
+    psikolog_name: string,
+    psikolog_klinik: string,
+    psikolog_phone: string) => {
         await mysql.connect();
-        const findId = await findPsikologById(mysql, psikolog_id);
-        const updatePsikolog = await updatePsikologName(mysql, findId, psikolog_name);
-        if (!findId){
-            throw new Error("Psikolog not found");
-        }
-        const updated: psikolog = {
-            psikolog_email: findId.psikolog_email,
-            psikolog_password: findId.psikolog_password,
-            psikolog_name: updatePsikolog.psikolog_name,
-            psikolog_klinik: findId.psikolog_klinik,
-            psikolog_phone: findId.psikolog_phone
-        };
-        return updated;
-    }
+        const updatedFields: any = {}
 
-const updateKlinik = async (
-    psikolog_id: number,
-    psikolog_klinik: string ) => {
-        await mysql.connect();
-        const findId = await findPsikologById(mysql, psikolog_id);
-        const updatePsikolog = await updatePsikologKlinik(mysql, findId, psikolog_klinik);
-        if (!findId){
-            throw new Error("Psikolog not found");
+        if (psikolog_name) {
+            updatedFields.psikolog_name = psikolog_name;
+            console.log("ppp", psikolog_name);
         }
-        const updated: psikolog = {
-            psikolog_email: findId.psikolog_email,
-            psikolog_password: findId.psikolog_password,
-            psikolog_name: findId.psikolog_name,
-            psikolog_klinik: updatePsikolog.psikolog_klinik,
-            psikolog_phone: findId.psikolog_phone
-        };
-        return updated;
-    }
+        if (psikolog_klinik) {
+            updatedFields.psikolog_klinik = psikolog_klinik;
+            console.log("aaaa", psikolog_klinik);
+        }
+        if (psikolog_phone) {
+            updatedFields.psikolog_phone = psikolog_phone;
+            console.log("bbbb", psikolog_phone);
+        }
 
-const updatePhonenumber = async (
-    psikolog_id: number,
-    psikolog_phone: string ) => {
-        await mysql.connect();
-        const findId = await findPsikologById(mysql, psikolog_id);
-        const updatePsikolog = await updatePsikologPhonenumber(mysql, findId, psikolog_phone);
-        if (!findId){
-            throw new Error("Psikolog not found");
+        if (Object.keys(updatedFields).length === 0) {
+            throw new Error('No fields to update');
         }
-        const updated: psikolog = {
-            psikolog_email: findId.psikolog_email,
-            psikolog_password: findId.psikolog_password,
-            psikolog_name: findId.psikolog_name,
-            psikolog_klinik: findId.psikolog_klinik,
-            psikolog_phone: updatePsikolog.psikolog_phone
-        };
-        return updated;
-    }
 
-const updatePassword = async (
-    psikolog_id: number,
-    psikolog_password: string ) => {
-        await mysql.connect();
-        const findId = await findPsikologById(mysql, psikolog_id);
-        const updatePsikolog = await updatePsikologPassword(mysql, findId, psikolog_password);
-        if (!findId){
+        const psikolog = await updatePsikolog(mysql, psikolog_id, updatedFields);
+        if (!psikolog){
             throw new Error("Psikolog not found");
         }
-        const updated: psikolog = {
-            psikolog_email: findId.psikolog_email,
-            psikolog_password: updatePsikolog.psikolog_password,
-            psikolog_name: findId.psikolog_name,
-            psikolog_klinik: findId.psikolog_klinik,
-            psikolog_phone: findId.psikolog_phone
-        };
-        return updated;
-    }
-
-const updateEmail = async (
-    psikolog_id: number,
-    psikolog_email: string ) => {
-        await mysql.connect();
-        const findId = await findPsikologById(mysql, psikolog_id);
-        const updatePsikolog = await updatePsikologEmail(mysql, findId, psikolog_email);
-        if (!findId){
-            throw new Error("Psikolog not found");
-        }
-        const updated: psikolog = {
-            psikolog_email: updatePsikolog.psikolog_email,
-            psikolog_password: findId.psikolog_password,
-            psikolog_name: findId.psikolog_name,
-            psikolog_klinik: findId.psikolog_klinik,
-            psikolog_phone: findId.psikolog_phone
-        };
-        return updated;
+        return psikolog;
     }
 
 
-export{ add, showPsikologId, updateName, updateKlinik, updatePhonenumber, updatePassword, updateEmail };
+export{ add, showPsikologId, updateProfile };

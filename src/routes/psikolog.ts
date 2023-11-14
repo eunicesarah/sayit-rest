@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { logger } from '../middlewares';
-import { showPsikologId } from '../service/psikolog';
+import { showPsikologId, updateProfile } from '../service/psikolog';
 import { showPsikolog } from '../models/psikolog';
 import mysql from '../infrastructure/database/mysql';
 import { login, register } from '../handler/psikolog';
@@ -46,3 +46,20 @@ router.get('/booked/:id', async (req: Request, res: Response) => {
     return res.status(500).send({ message: 'Internal Server Error' });
   }
 });
+
+
+    
+router.put('/update/:id', async (req: Request, res: Response) => {
+    try{
+      const psikolog = await updateProfile(parseInt(req.params.id), req.body.psikolog_name, req.body.psikolog_klinik, req.body.psikolog_phone);
+
+      if (psikolog) {
+        res.send({ message: `Psikolog with id ${req.params.id} has been updated`, data: psikolog });
+      } else {
+        res.status(404).send({ message: `Psikolog with id ${req.params.id} not found` });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send({ message: 'Internal Server Error' });
+    }
+  });

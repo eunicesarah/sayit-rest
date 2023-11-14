@@ -1,7 +1,7 @@
 import msql from "../../infrastructure/database/mysql";
 import { psikolog } from "./type";
 
-const addPsikolog = async (msql: any, psikolog: psikolog) => {
+export const addPsikolog = async (msql: any, psikolog: psikolog) => {
     console.log('Adding psikolog to database');
     try {
         const prisma = await msql.prisma();
@@ -23,7 +23,7 @@ const addPsikolog = async (msql: any, psikolog: psikolog) => {
 };
 
 
-const showPsikolog = async (msql: any) => {
+export const showPsikolog = async (msql: any) => {
     const prisma = await msql.prisma();
     const psikolog = await prisma.psikolog.findMany();
     if (psikolog.length === 0) {
@@ -32,7 +32,7 @@ const showPsikolog = async (msql: any) => {
     return psikolog;
 }
 
-const findPsikologByEmail = async (msql: any, email: string) => {
+export const findPsikologByEmail = async (msql: any, email: string) => {
     try {
       const prisma = await msql.prisma();
       console.log('Finding psikolog by email');
@@ -54,7 +54,7 @@ const findPsikologByEmail = async (msql: any, email: string) => {
   };
   
 
-const findPsikologById = async (msql: any, id: number) => {
+export const findPsikologById = async (msql: any, id: number) => {
     try {
       // Ensure that id is a valid number
       if (typeof id !== 'number' || isNaN(id)) {
@@ -86,73 +86,28 @@ const findPsikologById = async (msql: any, id: number) => {
     }
   };
   
+  export const updatePsikolog = async (msql: any, id: number, updatedFields: any) => {
+    try {
+      console.log('asd', msql);
+      console.log('ahskdas', msql.prisma);
+      console.log('adsad', msql.prisma.psikolog);
 
-const updatePsikologName = async (msql: any, id: number, name: string) => {
-    const prisma = await msql.prisma();
-    const psikolog = await prisma.psikolog.update({
-        where: {
-            psikolog_id: id,
-        },
-        data: {
-            psikolog_name: name,
-        },
-    });
-    return psikolog;
-}
+      const prisma = await msql.prisma();
+      const updatedPsikolog = await prisma.psikolog.update({
+        where: { psikolog_id: id },
+        data: updatedFields,
+      });
+      console.log('Updated psikolog:', updatedPsikolog);
+  
+      return updatedPsikolog;
+    } catch (error) {
+      console.error('Error updating psikolog:', error);
+      throw error;
+    }
+  };
+  
 
-const updatePsikologKlinik = async (msql: any, id: number, klinik: string) => {
-    const prisma = await msql.prisma();
-    const psikolog = await prisma.psikolog.update({
-        where: {
-            psikolog_id: id,
-        },
-        data: {
-            psikolog_klinik: klinik,
-        },
-    });
-    return psikolog;
-}
-
-const updatePsikologPhonenumber = async (msql: any, id: number, phonenumber: string) => {
-    const prisma = await msql.prisma();
-    const psikolog = await prisma.psikolog.update({
-        where: {
-            psikolog_id: id,
-        },
-        data: {
-            psikolog_phone: phonenumber,
-        },
-    });
-    return psikolog;
-}
-
-const updatePsikologPassword = async (msql: any, id: number, password: string) => {
-    const prisma = await msql.prisma();
-    const psikolog = await prisma.psikolog.update({
-        where: {
-            psikolog_id: id,
-        },
-        data: {
-            psikolog_password: password,
-        },
-    });
-    return psikolog;
-}
-
-const updatePsikologEmail = async (msql: any, id: number, email: string) => {
-    const prisma = await msql.prisma();
-    const psikolog = await prisma.psikolog.update({
-        where: {
-            psikolog_id: id,
-        },
-        data: {
-            psikolog_email: email,
-        },
-    });
-    return psikolog;
-}
-
-const bookPiskolog = async (msql: any, id: number, email: string) => {
+export const bookPiskolog = async (msql: any, id: number, email: string) => {
     const prisma = await msql.prisma();
     const book = await prisma.book.create({
         data: {
@@ -162,15 +117,3 @@ const bookPiskolog = async (msql: any, id: number, email: string) => {
     });
     return book;
 }
-
-export{
-    addPsikolog,
-    showPsikolog,
-    findPsikologByEmail,
-    findPsikologById,
-    updatePsikologName,
-    updatePsikologKlinik,
-    updatePsikologPhonenumber,
-    updatePsikologPassword,
-    updatePsikologEmail
-};
