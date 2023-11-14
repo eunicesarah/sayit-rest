@@ -33,29 +33,26 @@ const showPsikolog = async (msql: any) => {
 }
 
 const findPsikologByEmail = async (msql: any, email: string) => {
-    try{
-    const prisma = await msql.prisma();
-    const findPsikolog = await prisma.psikolog.findMany({
+    try {
+      const prisma = await msql.prisma();
+      console.log('Finding psikolog by email');
+  
+      const findPsikolog = await prisma.psikolog.findFirst({
         where: {
-            psikolog_email: email,
+          psikolog_email: email,
         },
-    });
-
-    const psikolog : psikolog = {
-    psikolog_email: findPsikolog[0].psikolog_email,
-    psikolog_password: findPsikolog[0].psikolog_password,
-    psikolog_name: findPsikolog[0].psikolog_name,
-    psikolog_klinik: findPsikolog[0].psikolog_klinik,
-    psikolog_phone: findPsikolog[0].psikolog_phone,
-    };
-    return psikolog;}
-    catch (error){
-        console.error('Error:', error);
-        throw error;
+      });
+  
+      console.log('Psikolog found:', findPsikolog);
+      return findPsikolog;
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
     } finally {
-        await msql.disconnect;
+      await msql.disconnect(); // Correct the function call to disconnect()
     }
-}
+  };
+  
 
 const findPsikologById = async (msql: any, id: number) => {
     try {

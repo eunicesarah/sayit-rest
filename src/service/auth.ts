@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import ph from "password-hash";
 import { psikolog } from "../models/psikolog/type";
 import { addPsikolog, findPsikologByEmail } from "../models/psikolog";
-import { hashPassword } from "../util/other";
+import bcrypt from "bcrypt";
 
 const registerPsikolog = async (
     psikolog_name: string,
@@ -29,18 +29,20 @@ const registerPsikolog = async (
     // }
 
     // const phonenumberRegex = /(0)(\d{10,12})/;
-    // const validPhonenumber = phonenumberRegex.test(String(psikolog_phonenumber));
+    // const validPhonenumber = phonenumberRegex.test(String(psikolog_phone));
     // if (!validPhonenumber){
     //     throw new Error("Invalid Phonenumber");
     // }
-    // console.log('Hashing password');
-    // const hashed = hashPassword(psikolog_password);
-    console.log("ppp", psikolog_password);
+    const saltRounds = 10; // You can adjust the number of salt rounds
+    const hashedPassword = await bcrypt.hash(psikolog_password, saltRounds);
+
+    console.log("Hashed password:", hashedPassword);
+
     console.log('Adding psikolog to database');
     const psikolog: psikolog = {
         psikolog_name: psikolog_name,
         psikolog_email: psikolog_email,
-        psikolog_password: psikolog_password,
+        psikolog_password: hashedPassword,
         psikolog_phone: String(psikolog_phone),
         psikolog_klinik: psikolog_klinik,
     };

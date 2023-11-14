@@ -5,15 +5,17 @@ import { showPsikolog } from '../models/psikolog';
 import mysql from '../infrastructure/database/mysql';
 import { loginPsikolog, registerPsikolog } from "../service/auth";
 import { login, register } from '../handler/user';
+import validateRequest from '../util/validate';
+import { jLoginReq, jRegisterReq } from '../handler/user/type';
 
 export const router = Router();
 
 router.use(logger);
 
 // Move the POST route for /register above the GET route for /psikolog
-router.post('/register', register);
+router.post('/register', validateRequest({body: jRegisterReq}),register);
 
-router.post('/login', login);
+router.post('/login', validateRequest({body: jLoginReq}), login);
 
 router.get('/consultation', async (req: Request, res: Response) => {
   try {

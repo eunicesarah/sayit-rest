@@ -18,10 +18,10 @@ model chat {
 
 model psikolog {
   psikolog_id       Int     @id @default(autoincrement())
-  psikolog_email    String  @unique(map: "psikolog_email_UNIQUE") @db.VarChar(45)
+  psikolog_email    String  @db.VarChar(45)
   psikolog_name     String  @db.VarChar(45)
   psikolog_password String  @db.VarChar(255)
   psikolog_klinik   String? @db.VarChar(45)
-  psikolog_phone    String  @unique(map: "psikolog_phone_UNIQUE") @db.VarChar(45)
+  psikolog_phone    String  @db.VarChar(45)
   chat              chat[]
 }

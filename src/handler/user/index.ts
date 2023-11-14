@@ -29,7 +29,7 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
             req.body.psikolog_email,
             req.body.psikolog_name,
             req.body.psikolog_password,
-            req.body.psikolog_phonenumber,
+            req.body.psikolog_phone,
             req.body.psikolog_klinik,
         );
         
