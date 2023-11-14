@@ -152,6 +152,17 @@ const updatePsikologEmail = async (msql: any, id: number, email: string) => {
     return psikolog;
 }
 
+const bookPiskolog = async (msql: any, id: number, email: string) => {
+    const prisma = await msql.prisma();
+    const book = await prisma.book.create({
+        data: {
+            psikolog_id: id,
+            user_email: email,
+        }
+    });
+    return book;
+}
+
 export{
     addPsikolog,
     showPsikolog,

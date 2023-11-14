@@ -1,5 +1,5 @@
 import express from 'express';
-import {psikologRouter} from './routes';
+import {psikologRouter, userRouter} from './routes';
 import { logger } from './middlewares';
 
 const app = express();
@@ -26,6 +26,8 @@ app.use(logger);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/psikolog', psikologRouter);
+app.use('/user', userRouter);
+
 
 app.use((req, res, next) => {
     res.send({message: 'Hello world!'});

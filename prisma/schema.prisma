@@ -7,21 +7,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model chat {
-  chat_id     Int      @id @default(autoincrement())
-  psikolog_id Int
-  user_id     String   @db.VarChar(45)
-  psikolog    psikolog @relation(fields: [psikolog_id], references: [psikolog_id], onDelete: Cascade, map: "psikolog_id")
-
-  @@index([psikolog_id], map: "psikolog_id_idx")
+model psikolog {
+  psikolog_id       Int           @id @default(autoincrement())
+  psikolog_email    String        @db.VarChar(45)
+  psikolog_name     String        @db.VarChar(45)
+  psikolog_password String        @db.VarChar(255)
+  psikolog_klinik   String?       @db.VarChar(45)
+  psikolog_phone    String        @db.VarChar(45)
+  reservation       reservation[]
 }
 
-model psikolog {
-  psikolog_id       Int     @id @default(autoincrement())
-  psikolog_email    String  @db.VarChar(45)
-  psikolog_name     String  @db.VarChar(45)
-  psikolog_password String  @db.VarChar(255)
-  psikolog_klinik   String? @db.VarChar(45)
-  psikolog_phone    String  @db.VarChar(45)
-  chat              chat[]
+model reservation {
+  reservation_id Int      @id @default(autoincrement())
+  psikolog_id    Int
+  user_id        Int
+  datetime       DateTime @db.DateTime(0)
+  psikolog       psikolog @relation(fields: [psikolog_id], references: [psikolog_id], onDelete: Cascade, map: "psikolog_id")
+
+  @@index([psikolog_id], map: "psikolog_id_idx")
 }
