@@ -52,21 +52,26 @@ const updateProfile = async (
     psikolog_id: number,
     psikolog_name: string,
     psikolog_klinik: string,
-    psikolog_phone: string) => {
+    psikolog_phone: string
+) => {
+    try {
+        console.log('Starting updateProfile');
+        
         await mysql.connect();
-        const updatedFields: any = {}
+
+        const updatedFields: any = {};
 
         if (psikolog_name) {
             updatedFields.psikolog_name = psikolog_name;
-            console.log("ppp", psikolog_name);
+            console.log("Updated psikolog_name:", psikolog_name);
         }
         if (psikolog_klinik) {
             updatedFields.psikolog_klinik = psikolog_klinik;
-            console.log("aaaa", psikolog_klinik);
+            console.log("Updated psikolog_klinik:", psikolog_klinik);
         }
         if (psikolog_phone) {
             updatedFields.psikolog_phone = psikolog_phone;
-            console.log("bbbb", psikolog_phone);
+            console.log("Updated psikolog_phone:", psikolog_phone);
         }
 
         if (Object.keys(updatedFields).length === 0) {
@@ -74,11 +79,24 @@ const updateProfile = async (
         }
 
         const psikolog = await updatePsikolog(mysql, psikolog_id, updatedFields);
-        if (!psikolog){
+
+        console.log('Updated psikolog:', psikolog);
+
+        if (!psikolog) {
             throw new Error("Psikolog not found");
         }
+
+        console.log('Finished updateProfile');
+        
         return psikolog;
+    } catch (error) {
+        console.error('Error in updateProfile:', error);
+        throw error;
+    } finally {
+        await mysql.disconnect();
     }
+};
+
 
 
 export{ add, showPsikologId, updateProfile };

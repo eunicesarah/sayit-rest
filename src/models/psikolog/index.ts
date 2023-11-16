@@ -107,7 +107,7 @@ export const findPsikologById = async (msql: any, id: number) => {
   };
   
 
-export const bookPiskolog = async (msql: any, id: number, email: string) => {
+export const bookPsikolog = async (msql: any, id: number, email: string) => {
     const prisma = await msql.prisma();
     const book = await prisma.book.create({
         data: {
