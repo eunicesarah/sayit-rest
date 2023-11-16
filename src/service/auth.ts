@@ -12,6 +12,7 @@ const registerPsikolog = async (
     psikolog_password: string,
     psikolog_phone: number,
     psikolog_klinik: string,
+    res: any
 ) => {
     try{
     await msql.connect();
@@ -50,6 +51,7 @@ const registerPsikolog = async (
 
     await addPsikolog(msql, psikolog);
     console.log('Psikolog added to database');
+    return res.json({message: "Psikolog berhasil ditambahkan"});
 }
 catch (error){
     console.error('Error:', error);
