@@ -18,11 +18,21 @@ model psikolog {
 }
 
 model reservation {
-  reservation_id Int      @id @default(autoincrement())
+  reservation_id Int        @id @default(autoincrement())
   psikolog_id    Int
   user_id        Int
-  datetime       DateTime @db.DateTime(0)
-  psikolog       psikolog @relation(fields: [psikolog_id], references: [psikolog_id], onDelete: Cascade, map: "psikolog_id")
+  datetime       DateTime   @db.DateTime(0)
+  feedback       feedback[]
+  psikolog       psikolog   @relation(fields: [psikolog_id], references: [psikolog_id], onDelete: Cascade, map: "psikolog_id")
 
   @@index([psikolog_id], map: "psikolog_id_idx")
+}
+
+model feedback {
+  feedback_id      Int          @id @default(autoincrement())
+  feedback_content String       @db.VarChar(255)
+  reservation_id   Int?
+  reservation      reservation? @relation(fields: [reservation_id], references: [reservation_id], onDelete: Cascade, map: "reservation_id")
+
+  @@index([reservation_id], map: "reservation_id_idx")
 }

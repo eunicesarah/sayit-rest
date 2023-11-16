@@ -117,3 +117,14 @@ export const bookPsikolog = async (msql: any, id: number, email: string) => {
     });
     return book;
 }
+
+export const reservationFeedback = async (msql: any, id: number, feedback: string) => {
+  const prisma = await msql.prisma();
+  const feedbacks = await prisma.reservation.update({
+      where: { reservation_id: id },
+      data: {
+          reservation_feedback: feedback,
+      }
+  });
+  return feedbacks;
+}

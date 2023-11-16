@@ -13,7 +13,7 @@ var corsOptions = {
   methods: ['GET', 'PUT', 'POST', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   optionsSuccessStatus: 200,
-  allowedOrigins: ['http://localhost:3001']
+  allowedOrigins: ['http://localhost:3000']
 };
 const accessValidation = (req: any, res: any, next: any) => {
     const {authorization} = req.headers;

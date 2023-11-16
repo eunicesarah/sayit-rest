@@ -11,6 +11,6 @@ COPY prisma ./prisma
 
 RUN npm install
 
-EXPOSE 3000
+EXPOSE 3010
 
 CMD ["npm", "start"]

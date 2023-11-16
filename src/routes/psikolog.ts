@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { logger } from '../middlewares';
-import { showPsikologId, updateProfile } from '../service/psikolog';
+import { delFeedback, giveFeedback, showPsikologId, updateProfile } from '../service/psikolog';
 import { showPsikolog } from '../models/psikolog';
 import mysql from '../infrastructure/database/mysql';
 import { login, register } from '../handler/psikolog';
@@ -16,6 +16,20 @@ router.use(logger);
 router.post('/register', validateRequest({body: jRegisterReq}),register);
 
 router.post('/login', validateRequest({body: jLoginReq}), login);
+
+router.post('/feedback/:id', async (req: Request, res: Response) => {
+  try {
+    const feedback = await giveFeedback(
+      parseInt(req.params.id),
+      req.body.feedback_content,
+      );
+      res.send({ message: 'Feedback added successfully', data: feedback });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send({ message: 'Internal Server Error' });
+  }
+}
+);
 
 router.get('/user/:id', async (req: Request, res: Response) => {
   try {
@@ -63,3 +77,14 @@ router.put('/update/:id', async (req: Request, res: Response) => {
       res.status(500).send({ message: 'Internal Server Error' });
     }
   });
+
+router.delete('/delete/:id', async (req: Request, res: Response) => {
+  try {
+    const psikolog = await delFeedback(parseInt(req.params.id));
+
+    return res.send({ message: 'Feedback deleted', data: psikolog });
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).send({ message: 'Internal Server Error' });
+  }
+});

@@ -1,6 +1,7 @@
 import mysql from "../infrastructure/database/mysql";
 import { psikolog } from "../models/psikolog/type";
 import { addPsikolog, findPsikologByEmail, findPsikologById, updatePsikolog } from "../models/psikolog";
+import { addFeedback, deleteFeedback, showList } from "../models/feedback";
 
 const add = async (
     psikolog_email: string,
@@ -97,6 +98,28 @@ const updateProfile = async (
     }
 };
 
+const giveFeedback = async (
+    reservation_id: number,
+    feedback_content: string,) => {
+        await mysql.connect();
+        const feedback = await addFeedback(mysql, feedback_content, reservation_id);
+        return feedback;
+    }
+
+const delFeedback = async (
+    feedback_id: number) => {
+        await mysql.connect();
+        const feedback = await deleteFeedback(mysql, feedback_id);
+        return feedback;
+    }
+
+const showFeedbackByReservationId = async (
+    feedback_id: number) => {
+        await mysql.connect();
+        const feedback = await showList(mysql, feedback_id);
+        return feedback;
+    }
 
 
-export{ add, showPsikologId, updateProfile };
+
+export{ add, showPsikologId, updateProfile, giveFeedback, delFeedback, showFeedbackByReservationId };
