@@ -10,7 +10,7 @@ const login =  async (req: Request, res: Response, next: NextFunction) => {
         const psikolog_password = req.body.psikolog_password;
 
         console.log("the user is " + psikolog_email + " " + psikolog_password);
-        const result = await loginPsikolog(psikolog_email, psikolog_password);
+        const result = await loginPsikolog(psikolog_email, psikolog_password, res);
         console.log("the result is " + result);
     }
     catch (error) {
@@ -22,8 +22,8 @@ const login =  async (req: Request, res: Response, next: NextFunction) => {
 const register = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const result = await registerPsikolog(
-            req.body.psikolog_email,
             req.body.psikolog_name,
+            req.body.psikolog_email,
             req.body.psikolog_password,
             req.body.psikolog_phone,
             req.body.psikolog_klinik,

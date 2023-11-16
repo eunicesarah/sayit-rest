@@ -1,6 +1,7 @@
 import express from 'express';
 import {psikologRouter, userRouter} from './routes';
 import { logger } from './middlewares';
+import jwt from 'jsonwebtoken';
 
 const app = express();
 const port = 3000 ;
@@ -14,6 +15,26 @@ var corsOptions = {
   optionsSuccessStatus: 200,
   allowedOrigins: ['http://localhost:3001']
 };
+const accessValidation = (req: any, res: any, next: any) => {
+    const {authorization} = req.headers;
+    if(!authorization){
+        return res.status(401).json({
+            message: 'Token diperlukan untuk mengakses halaman ini'
+        }); 
+    }
+    const token = authorization.split(' ')[1];
+    const secret = process.env.JWT_SECRET!;
+    try{
+        const decoded = jwt.verify(token, secret);
+        req.user = decoded;
+        next();
+    } catch (error){
+        return res.status(401).json({
+            message: 'Token tidak valid'
+        });
+
+    };
+}
 
 console.log(`port: ${port}`);
 
@@ -26,7 +47,7 @@ app.use(logger);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/psikolog', psikologRouter);
-app.use('/user', userRouter);
+app.use('/user', accessValidation,userRouter);
 
 
 app.use((req, res, next) => {

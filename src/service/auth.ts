@@ -4,6 +4,7 @@ import ph from "password-hash";
 import { psikolog } from "../models/psikolog/type";
 import { addPsikolog, findPsikologByEmail } from "../models/psikolog";
 import bcrypt from "bcrypt";
+import { response } from "express";
 
 const registerPsikolog = async (
     psikolog_name: string,
@@ -14,25 +15,24 @@ const registerPsikolog = async (
 ) => {
     try{
     await msql.connect();
-    // const findEmail = await findPsikologByEmail(msql, psikolog_email);
-    // console.log("ppp", findEmail);
-    // if (!findEmail || !findEmail) {
-    //     console.log('Email already registered or missing name');
-    //     throw new Error("Email already registered or missing name");
-    // }
-    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // const validEmail = emailRegex.test(psikolog_email);
-    // console.log('Validating email');
-    // console.log('Email is valid:', validEmail);
-    // if (!validEmail){
-    //     throw new Error("Invalid email");
-    // }
+    // Check if the email already exists
+    const existingPsikolog = await findPsikologByEmail(msql, psikolog_email);
+    if (existingPsikolog) {
+        throw new Error('Email is already registered');
+       
+    }
+    const emailRegex = /\S+@\S+\.\S+/;
+    const validEmail = emailRegex.test(psikolog_email);
+    if (!validEmail){
+        throw new Error("Invalid email");
+    }
 
-    // const phonenumberRegex = /(0)(\d{10,12})/;
-    // const validPhonenumber = phonenumberRegex.test(String(psikolog_phone));
-    // if (!validPhonenumber){
-    //     throw new Error("Invalid Phonenumber");
-    // }
+    const phonenumberRegex = /(0)(\d{10,12})/;
+    const validPhonenumber = phonenumberRegex.test(String(psikolog_phone));
+    if (!validPhonenumber){
+        throw new Error("Invalid phonenumber");
+    }
+
     const saltRounds = 10; // You can adjust the number of salt rounds
     const hashedPassword = await bcrypt.hash(psikolog_password, saltRounds);
 
@@ -59,7 +59,7 @@ catch (error){
 }
 }
 
-const loginPsikolog = async (email: string, password: string) => {
+const loginPsikolog = async (email: string, password: string, res: any) => {
     try {
         console.log('Connecting to MySQL');
         await msql.connect();
@@ -77,7 +77,10 @@ const loginPsikolog = async (email: string, password: string) => {
     console.log('Verifying password');
     console.log('Entered Password:', password);
     console.log('Stored Hashed Password:', user.psikolog_password);
-    if (user.psikolog_password !== password){
+    console.log('Password Match:', await bcrypt.compare(password, user.psikolog_password));
+    const passwordMatch = await bcrypt.compare(password, user.psikolog_password);
+
+    if (!passwordMatch) {
         throw new Error("Wrong password");
     }
 
@@ -89,7 +92,7 @@ const loginPsikolog = async (email: string, password: string) => {
     const secret = process.env.JWT_SECRET!;
     const duration = process.env.JWT_DURATION!;
     const token = jwt.sign(payload, secret, { expiresIn: duration });
-    return token;
+    return res.json({ token, user });
 }
 
 export {registerPsikolog, loginPsikolog};
