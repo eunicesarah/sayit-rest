@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    ports:
+      - '3010:3000'
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+  db:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=rest_prisma
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=123456
+    ports:
+      - '3307:3306'
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
