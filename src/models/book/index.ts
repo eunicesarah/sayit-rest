@@ -1,6 +1,6 @@
-import {Reservation} from './type';
+import {reservation} from './type';
 
-export const reservedPsikolog =async (msql:any, reserved: Reservation) => {
+export const reservedPsikolog =async (msql:any, reserved: reservation) => {
     console.log('Adding reservation to database');
     try{
         const prisma = await msql.prisma();
@@ -17,20 +17,20 @@ export const reservedPsikolog =async (msql:any, reserved: Reservation) => {
     }
 }
 
-export const showReservedPsikolog = async (msql: any, id: number) => {
-    console.log('Showing id', id);
+export const showReservedPsikolog = async (msql: any, psikologId: number) => {
+    console.log('Showing id', psikologId);
     try {
-        const prisma = await msql.prisma();
-        const psikolog = await prisma.reservation.findMany({
-            where: {
-                psikolog_id: id,
-            },
-        });
-        console.log('Id', id);
-        console.log('Showing reserved psikolog', psikolog);
-        return psikolog;
+      const prisma = await msql.prisma();
+      const psikolog = await prisma.reservation.findMany({
+        where: {
+          psikolog_id: psikologId,
+        },
+      });
+      console.log('Id', psikologId);
+      console.log('Showing reserved psikolog', psikolog);
+      return psikolog;
     } catch (error) {
-        console.error('Error in findPsikologById:', error);
-        throw error;
+      console.error('Error in findPsikologById:', error);
+      throw error;
     }
-}
+  };

@@ -46,15 +46,16 @@ router.get('/user/:id', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/booked/:id', async (req: Request, res: Response) => {
+router.get('/booked/:id', async (req, res) => {
   try {
-    const psikolog = await listReservation(parseInt(req.params.id));
+    const psikologId = parseInt(req.params.id);
+    const reservations = await listReservation(psikologId);
 
-    if (!psikolog) {
-      return res.status(404).send({ message: 'Psikolog not found' });
+    if (!reservations || reservations.length === 0) {
+      return res.status(404).send({ message: 'Reservations not found for this psychologist' });
     }
 
-    return res.send({ message: 'Show all psikolog', data: psikolog });
+    return res.send({ message: 'Showing reservations for the psychologist', data: reservations });
   } catch (error) {
     console.error('Error:', error);
     return res.status(500).send({ message: 'Internal Server Error' });

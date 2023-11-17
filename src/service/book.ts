@@ -1,15 +1,15 @@
 import msql from "../infrastructure/database/mysql";
-import { Reservation } from "../models/book/type";
+import { reservation } from "../models/book/type";
 import { reservedPsikolog, showReservedPsikolog } from "../models/book";
 
 const makeReservation = async (
-    psikolog_id: number,
     user_id: number,
+    psikolog_id: number,
     datetime: string,
 ) => {
     try {
         await msql.connect();
-        const reservation: Reservation = {
+        const reservation: reservation = {
             psikolog_id: psikolog_id,
             user_id: user_id,
             datetime: datetime,
@@ -23,19 +23,18 @@ const makeReservation = async (
     }
 }
 
-const listReservation = async (psikolog_id: number) => {
+const listReservation = async (psikologId: number) => {
     try {
-        await msql.connect();
-        console.log('Showing reserved psikoolog', psikolog_id);
-        const reservation = await showReservedPsikolog(msql, psikolog_id);
-        console.log('Showing reserved reservation', reservation);
-        return reservation;
+      await msql.connect();
+      const reservation = await showReservedPsikolog(msql, psikologId);
+      console.log('Showing reserved reservation', reservation);
+      return reservation;
     } catch (error) {
-        console.error('Error:', error);
-        throw error;
+      console.error('Error:', error);
+      throw error;
     } finally {
-        await msql.disconnect();
+      await msql.disconnect();
     }
-}
+  };
 
 export {makeReservation, listReservation};

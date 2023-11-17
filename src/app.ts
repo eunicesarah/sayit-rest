@@ -4,16 +4,16 @@ import { logger } from './middlewares';
 import jwt from 'jsonwebtoken';
 
 const app = express();
-const port = 3000 ;
+const port = 3010 ;
 const cors = require('cors');
 
 var corsOptions = {
-  origin: 'http://localhost:3001',
+  origin: ['http://localhost:3000', 'http://localhost:8008'],
   credentials: true,
   methods: ['GET', 'PUT', 'POST', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   optionsSuccessStatus: 200,
-  allowedOrigins: ['http://localhost:3000']
+  allowedOrigins: ['http://localhost:3000', 'http://localhost:8008']
 };
 const accessValidation = (req: any, res: any, next: any) => {
     const {authorization} = req.headers;
@@ -47,7 +47,7 @@ app.use(logger);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/psikolog', psikologRouter);
-app.use('/user', accessValidation,userRouter);
+app.use('/user', accessValidation, userRouter);
 
 
 app.use((req, res, next) => {

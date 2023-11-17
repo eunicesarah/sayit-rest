@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { makeReservation } from "../../service/book";
 
-const bookingPsikolog = async (req: Request) => {
+const bookingPsikolog = async (req: any) => {
     try{
         const user_id = req.body.user_id;
         const psikolog_id = req.body.psikolog_id;
