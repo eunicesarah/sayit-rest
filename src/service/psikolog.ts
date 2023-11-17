@@ -2,6 +2,7 @@ import mysql from "../infrastructure/database/mysql";
 import { psikolog } from "../models/psikolog/type";
 import { addPsikolog, findPsikologByEmail, findPsikologById, updatePsikolog } from "../models/psikolog";
 import { addFeedback, deleteFeedback, showList } from "../models/feedback";
+import { deletePsikolog } from "./auth";
 
 const add = async (
     psikolog_email: string,
@@ -119,7 +120,28 @@ const showFeedbackByReservationId = async (
         const feedback = await showList(mysql, feedback_id);
         return feedback;
     }
+const deleteProfile = async (psikolog_id: number) => {
+        try {
+          await mysql.connect();
+          const deletedPsikolog = await deletePsikolog(mysql, psikolog_id);
+      
+          console.log('Deleted psikolog:', deletedPsikolog);
+      
+          if (!deletedPsikolog) {
+            throw new Error('Psikolog not found');
+          }
+      
+          console.log('Finished deleteProfile');
+      
+          return deletedPsikolog;
+        } catch (error) {
+          console.error('Error in deleteProfile:', error);
+          throw error;
+        } finally {
+          await mysql.disconnect();
+        }
+      };
 
 
 
-export{ add, showPsikologId, updateProfile, giveFeedback, delFeedback, showFeedbackByReservationId };
+export{ add, showPsikologId, updateProfile, giveFeedback, delFeedback, showFeedbackByReservationId , deleteProfile};

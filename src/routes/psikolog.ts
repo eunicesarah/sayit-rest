@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { logger } from '../middlewares';
-import { delFeedback, giveFeedback, showPsikologId, updateProfile } from '../service/psikolog';
+import { delFeedback, deleteProfile, giveFeedback, showPsikologId, updateProfile } from '../service/psikolog';
 import { showPsikolog } from '../models/psikolog';
 import mysql from '../infrastructure/database/mysql';
 import { login, register } from '../handler/psikolog';
@@ -46,16 +46,15 @@ router.get('/user/:id', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/booked/:id', async (req, res) => {
+router.get('/booked/:id', async (req: Request, res: Response) => {
   try {
-    const psikologId = parseInt(req.params.id);
-    const reservations = await listReservation(psikologId);
+    const psikolog = await listReservation(parseInt(req.params.id));
 
-    if (!reservations || reservations.length === 0) {
-      return res.status(404).send({ message: 'Reservations not found for this psychologist' });
+    if (!psikolog) {
+      return res.status(404).send({ message: 'Psikolog not found' });
     }
 
-    return res.send({ message: 'Showing reservations for the psychologist', data: reservations });
+    return res.send({ message: 'Show all psikolog', data: psikolog });
   } catch (error) {
     console.error('Error:', error);
     return res.status(500).send({ message: 'Internal Server Error' });
@@ -87,5 +86,20 @@ router.delete('/delete/:id', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error:', error);
     return res.status(500).send({ message: 'Internal Server Error' });
+  }
+});
+
+router.delete('/deleteProfile/:id', async (req: Request, res: Response) => {
+  try {
+    const psikolog = await deleteProfile(parseInt(req.params.id));
+
+    if (psikolog) {
+      res.send({ message: `Psikolog with id ${req.params.id} has been deleted`, data: psikolog });
+    } else {
+      res.status(404).send({ message: 'Psikolog with id ${req.params.id} not found'});
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send({ message: 'Internal Server Error' });
   }
 });
